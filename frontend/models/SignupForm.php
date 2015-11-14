@@ -56,4 +56,13 @@ class SignupForm extends Model
 
         return null;
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => '用户名',
+            'password' => '密码',
+            'email' => '邮箱',
+        ];
+    }
 }
