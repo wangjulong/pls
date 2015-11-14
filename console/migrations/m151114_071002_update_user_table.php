@@ -9,18 +9,23 @@ class m151114_071002_update_user_table extends Migration
     {
         // 更新 user 表的字段 status 改名为 status_id default 1
         // 新增表字段 user_type_id , role_id default 1
+        // 更新created_at , updated_at 类型为 datetime
         $this->addColumn('user', 'user_type_id', Schema::TYPE_SMALLINT . ' not null default 1');
         $this->addColumn('user', 'role_id', Schema::TYPE_SMALLINT . ' not null default 1');
-        $this->dropColumn('user','status');
-        $this->addColumn('user','status_id',Schema::TYPE_SMALLINT . ' not null default 1');
+        $this->dropColumn('user', 'status');
+        $this->dropColumn('user', 'created_at');
+        $this->dropColumn('user', 'updated_at');
+        $this->addColumn('user', 'status_id', Schema::TYPE_SMALLINT . ' not null default 1');
+        $this->addColumn('user', 'created_at', Schema::TYPE_DATETIME . ' not null');
+        $this->addColumn('user', 'updated_at', Schema::TYPE_DATETIME . ' not null');
     }
 
     public function down()
     {
-        $this->dropColumn('user','user_type_id');
+        $this->dropColumn('user', 'user_type_id');
         $this->dropColumn('user', 'role_id');
-        $this->dropColumn('user','status_id');
-        $this->addColumn('user','status',Schema::TYPE_SMALLINT . ' not null default 10');
+        $this->dropColumn('user', 'status_id');
+        $this->addColumn('user', 'status', Schema::TYPE_SMALLINT . ' not null default 10');
     }
 
     /*
