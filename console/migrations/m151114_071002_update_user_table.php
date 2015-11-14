@@ -13,11 +13,9 @@ class m151114_071002_update_user_table extends Migration
         $this->addColumn('user', 'user_type_id', Schema::TYPE_SMALLINT . ' not null default 1');
         $this->addColumn('user', 'role_id', Schema::TYPE_SMALLINT . ' not null default 1');
         $this->dropColumn('user', 'status');
-        $this->dropColumn('user', 'created_at');
-        $this->dropColumn('user', 'updated_at');
         $this->addColumn('user', 'status_id', Schema::TYPE_SMALLINT . ' not null default 1');
-        $this->addColumn('user', 'created_at', Schema::TYPE_DATETIME . ' not null');
-        $this->addColumn('user', 'updated_at', Schema::TYPE_DATETIME . ' not null');
+        $this->alterColumn('user', 'created_at', Schema::TYPE_DATETIME . ' not null');
+        $this->alterColumn('user', 'updated_at', Schema::TYPE_DATETIME . ' not null');
     }
 
     public function down()
