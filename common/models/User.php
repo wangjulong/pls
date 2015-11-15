@@ -1,11 +1,13 @@
 <?php
 namespace common\models;
 
+use backend\models\Role;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -73,6 +75,8 @@ class User extends ActiveRecord implements IdentityInterface
             ['email', 'required'],
             ['email', 'unique'],
             ['email', 'email'],
+
+            [['role_id'], 'in', 'range' => array_keys($this->getRoleList())],
         ];
     }
 
@@ -217,8 +221,41 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
     }
+
+    /**
+     * get role relationship
+     *
+     */
+
+    public function getRole()
+    {
+        return $this->hasOne(Role::className(), ['id' => 'role_id']);
+    }
+
+    /**
+     * get role name
+     *
+     */
+
+    public function getRoleName()
+    {
+        return $this->role ? $this->role->role_name : '- no role -';
+    }
+
+    /**
+     * get list of roles for dropdown
+     *
+     */
+
+    public static function getRoleList()
+    {
+        $droptions = Role::find()->asArray()->all();
+        return ArrayHelper::map($droptions, 'id', 'role_name');
+    }
+
 }
