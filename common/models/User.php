@@ -67,6 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status_id', 'in', 'range' => array_keys($this->getStatusList())],
             ['role_id', 'default', 'value' => 1],
             ['user_type_id', 'default', 'value' => 1],
+            ['user_type_id', 'in', 'range' => array_keys($this->getUserTypeList())],
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
             ['username', 'unique'],
@@ -307,6 +308,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getUserTypeId()
     {
-        return $this->UserType ? $this->UserType : '- none -';
+        return $this->userType ? $this->userType->id : '- none -';
     }
+
 }
