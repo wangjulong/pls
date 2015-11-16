@@ -2,9 +2,9 @@
 namespace common\models;
 
 use backend\models\Role;
+use backend\models\Status;
 use Yii;
 use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -19,7 +19,9 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $email
  * @property string $auth_key
- * @property integer $status
+ * @property integer $role_id
+ * @property integer $status_id
+ * @property integer $user_type_id
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -48,8 +50,8 @@ class User extends ActiveRecord implements IdentityInterface
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                    'value' => new Expression('NOW()'),
                 ],
+                'value' => new Expression('NOW()'),
             ],
         ];
     }
@@ -61,22 +63,17 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status_id', 'default', 'value' => self::STATUS_ACTIVE],
-
+            ['status_id', 'in', 'range' => array_keys($this->getStatusList())],
             ['role_id', 'default', 'value' => 1],
-
             ['user_type_id', 'default', 'value' => 1],
-
             ['username', 'filter', 'filter' => 'trim'],
             ['username', 'required'],
             ['username', 'unique'],
             ['username', 'string', 'min' => 2, 'max' => 16],
-
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'required'],
-            ['email', 'unique'],
             ['email', 'email'],
-
-            [['role_id'], 'in', 'range' => array_keys($this->getRoleList())],
+            ['email', 'unique'],
         ];
     }
 
@@ -145,11 +142,9 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($token)) {
             return false;
         }
-
-//        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         $parts = explode('_', $token);
         $timestamp = (int)end($parts);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
 
@@ -222,6 +217,10 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    /**
+     * @return \yii\db\ActiveQuery
+     * todo 引用类
+     */
     public function getProfile()
     {
         return $this->hasOne(Profile::className(), ['user_id' => 'id']);
@@ -229,9 +228,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * get role relationship
-     *
      */
-
     public function getRole()
     {
         return $this->hasOne(Role::className(), ['id' => 'role_id']);
@@ -239,23 +236,43 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * get role name
-     *
      */
-
     public function getRoleName()
     {
         return $this->role ? $this->role->role_name : '- no role -';
     }
 
     /**
-     * get list of roles for dropdown
-     *
+     * get list of roles for drop down
      */
-
     public static function getRoleList()
     {
         $droptions = Role::find()->asArray()->all();
         return ArrayHelper::map($droptions, 'id', 'role_name');
     }
 
+    /**
+     * get status relation
+     */
+    public function getStatus()
+    {
+        return $this->hasOne(Status::className(), ['id' => 'status_id']);
+    }
+
+    /**
+     * get status name
+     */
+    public function getStatusName()
+    {
+        return $this->status ? $this->status->status_name : '- no status - ';
+    }
+
+    /**
+     * get list of statuses for drop down     *
+     */
+    public static function getStatusList()
+    {
+        $droptions = Status::find()->asArray()->all();
+        return ArrayHelper::map($droptions, 'id', 'status_name');
+    }
 }
