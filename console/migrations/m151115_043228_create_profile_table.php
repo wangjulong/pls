@@ -9,11 +9,11 @@ class m151115_043228_create_profile_table extends Migration
     {
         $this->createTable('profile', [
             'id' => $this->primaryKey(11)->unique()->notNull(),
-            'user_id' => $this->integer(11)->unique()->notNull(),
+            'user_id' => $this->integer(11)->notNull(),
             'first_name' => $this->text() . '(60)',
             'last_name' => $this->text() . '(60)',
-            'birthday' => $this->date(),
-            'gender_id' => $this->smallInteger(6)->notNull()->unique(),
+            'birthdate' => $this->date(),
+            'gender_id' => $this->smallInteger(6)->notNull(),
             'created_at' => $this->dateTime(),
             'updated_at' => $this->dateTime(),
         ]);
