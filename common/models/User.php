@@ -3,6 +3,7 @@ namespace common\models;
 
 use backend\models\Role;
 use backend\models\Status;
+use backend\models\UserType;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
@@ -274,5 +275,38 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $droptions = Status::find()->asArray()->all();
         return ArrayHelper::map($droptions, 'id', 'status_name');
+    }
+
+    /**
+     * get UserType
+     */
+    public function getUserType()
+    {
+        return $this->hasOne(UserType::className(), ['id' => 'user_type_id']);
+    }
+
+    /**
+     * get user type name
+     */
+    public function getUserTypeName()
+    {
+        return $this->userType ? $this->userType->user_type_name : '- no user type -';
+    }
+
+    /**
+     * get list of user type for drop down
+     */
+    public function getUserTypeList()
+    {
+        $droptions = UserType::find()->asArray()->all();
+        return ArrayHelper::map($droptions, 'id', 'user_type_name');
+    }
+
+    /**
+     * get user type id
+     */
+    public function getUserTypeId()
+    {
+        return $this->UserType ? $this->UserType : '- none -';
     }
 }
