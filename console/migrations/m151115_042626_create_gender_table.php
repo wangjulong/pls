@@ -17,7 +17,7 @@ class m151115_042626_create_gender_table extends Migration
             'id' => $this->smallInteger(6),
             'gender_name' => $this->string(45)->notNull(),
         ], $tableOptions);
-        $this->alterColumn('gender', 'id', Schema::TYPE_SMALLINT . '(6)' . ' primary key auto_increment unique');
+        $this->alterColumn('gender', 'id', Schema::TYPE_SMALLINT . ' UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT');
     }
 
     public function down()

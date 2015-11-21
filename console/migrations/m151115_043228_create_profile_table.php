@@ -14,15 +14,18 @@ class m151115_043228_create_profile_table extends Migration
         }
 
         $this->createTable('profile', [
-            'id' => $this->primaryKey(11)->unique()->notNull(),
-            'user_id' => $this->integer(11)->notNull(),
+            'id' => $this->integer(11),
+            'user_id' => $this->integer(11),
             'first_name' => $this->text() . '(60)',
             'last_name' => $this->text() . '(60)',
             'birthdate' => $this->date(),
-            'gender_id' => $this->smallInteger(6)->notNull(),
+            'gender_id' => $this->smallInteger(6),
             'created_at' => $this->dateTime(),
             'updated_at' => $this->dateTime(),
         ], $tableOptions);
+        $this->alterColumn('profile','id',Schema::TYPE_INTEGER . ' unsigned unique primary key auto_increment');
+        $this->alterColumn('profile','user_id',Schema::TYPE_INTEGER . ' unsigned not null');
+        $this->alterColumn('profile','gender_id',Schema::TYPE_SMALLINT . ' unsigned not null');
         $this->addForeignKey('fk_gender_profile', 'profile', 'gender_id', 'gender', 'id');
     }
 
