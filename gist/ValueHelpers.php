@@ -1,5 +1,12 @@
 <?php
-namespace common\models;
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2015/11/22
+ * Time: 21:07
+ */
+
+//namespace common\models;
 
 use yii;
 use backend\models\Role;
@@ -20,10 +27,10 @@ class ValueHelpers
 
     }
 
-    public static function getUsersRoleValue($userId = null)
+    public static function getUsersRoleValue($userId=null)
     {
 
-        if ($userId == null) {
+        if ($userId == null){
 
             $usersRoleValue = Yii::$app->user->identity->role->role_value;
 
@@ -90,7 +97,6 @@ class ValueHelpers
         $userHasUserTypeName = Yii::$app->user->identity->userType->user_type_name;
 
         return $userHasUserTypeName == $user_type_name ? true : false;
-
 
     }
 
