@@ -1,5 +1,11 @@
 <?php
-namespace frontend\models;
+/**
+ * Created by PhpStorm.
+ * User: Administrator
+ * Date: 2015/11/22
+ * Time: 15:47
+ */
+//namespace frontend\models;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -36,6 +42,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * behaviors
      */
+
     public function behaviors()
     {
         return [
@@ -50,6 +57,7 @@ class Profile extends \yii\db\ActiveRecord
         ];
     }
 
+
     /**
      * @inheritdoc
      */
@@ -60,7 +68,7 @@ class Profile extends \yii\db\ActiveRecord
             [['user_id', 'gender_id'], 'integer'],
             [['gender_id'], 'in', 'range' => array_keys($this->getGenderList())],
             [['first_name', 'last_name'], 'string'],
-            [['birthdate'], 'date', 'format' => 'php:Y-m-d'],
+            [['birthdate'], 'date', 'format' => 'Y-m-d'],
             [['birthdate', 'created_at', 'updated_at'], 'safe']
         ];
     }
@@ -93,6 +101,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+
     public function getGenderName()
     {
         return $this->gender->gender_name;
@@ -101,15 +110,19 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * get list of genders for dropdown
      */
+
     public static function getGenderList()
     {
+
         $droptions = Gender::find()->asArray()->all();
         return ArrayHelper::map($droptions, 'id', 'gender_name');
+
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
+
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
@@ -118,6 +131,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * @get Username
      */
+
     public function getUsername()
     {
         return $this->user->username;
@@ -126,6 +140,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * @getUserId
      */
+
     public function getUserId()
     {
         return $this->user ? $this->user->id : 'none';
@@ -134,6 +149,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * @getUserLink
      */
+
     public function getUserLink()
     {
         $url = Url::to(['user/view', 'id' => $this->UserId]);
@@ -144,6 +160,7 @@ class Profile extends \yii\db\ActiveRecord
     /**
      * @getProfileLink
      */
+
     public function getProfileIdLink()
     {
         $url = Url::to(['profile/update', 'id' => $this->id]);
