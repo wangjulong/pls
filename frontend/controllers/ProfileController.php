@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\RecordHelpers;
 use Yii;
 use frontend\models\Profile;
 use frontend\models\Search\ProfileSearch;
@@ -17,6 +18,17 @@ class ProfileController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -32,13 +44,13 @@ class ProfileController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new ProfileSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        if ($already_exists = RecordHelpers::userHas('profile')) {
+            return $this->render('view', [
+                'model' => $this->findModel($already_exists),
+            ]);
+        } else {
+            return $this->redirect(['create']);
+        }
     }
 
     /**
@@ -46,11 +58,15 @@ class ProfileController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView()
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        if ($already_exists = RecordHelpers::userHas('profile')) {
+            return $this->render('view', [
+                'model' => $this->findModel($already_exists),
+            ]);
+        } else {
+            return $this->redirect(['create']);
+        }
     }
 
     /**
@@ -60,14 +76,16 @@ class ProfileController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Profile();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
+        $model = new Profile;
+        $model->user_id = \Yii::$app->user->identity->id;
+        if ($already_exists = RecordHelpers::userHas('profile')) {
+            return $this->render('view', [
+                'model' => $this->findModel($already_exists),
             ]);
+        } elseif ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view']);
+        } else {
+            return $this->render('create', ['model' => $model,]);
         }
     }
 
@@ -77,16 +95,18 @@ class ProfileController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model = Profile::find()->where(['user_id' =>
+            Yii::$app->user->identity->id])->one()
+        ) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view']);
+            } else {
+                return $this->render('update', ['model' => $model,]);
+            }
         } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            throw new NotFoundHttpException('No Such Profile.');
         }
     }
 
@@ -96,11 +116,13 @@ class ProfileController extends Controller
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $model = Profile::find()->where([
+            'user_id' => Yii::$app->user->identity->id
+        ])->one();
+        $this->findModel($model->id)->delete();
+        return $this->redirect(['site/index']);
     }
 
     /**
