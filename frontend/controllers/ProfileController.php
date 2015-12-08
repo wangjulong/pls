@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\PermissionHelpers;
 use common\models\RecordHelpers;
 use Yii;
 use frontend\models\Profile;
@@ -97,6 +98,7 @@ class ProfileController extends Controller
      */
     public function actionUpdate()
     {
+        PermissionHelpers::requireUpgradeTo('Paid');
         if ($model = Profile::find()->where(['user_id' =>
             Yii::$app->user->identity->id])->one()
         ) {
