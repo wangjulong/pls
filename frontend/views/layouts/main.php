@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company: ' . __FILE__,
+        'brandLabel' => 'Yii 2 Build' . __FILE__,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -43,6 +43,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => '注册', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => '登录', 'url' => ['/site/login']];
     } else {
+        $menuItems[] = ['label' => '简介', 'url' => ['/profile/view']];
         $menuItems[] = [
             'label' => '注销 (' . Yii::$app->user->identity->username . ')',
             'url' => ['/site/logout'],

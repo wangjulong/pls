@@ -150,4 +150,15 @@ class Profile extends \yii\db\ActiveRecord
         $options = [];
         return Html::a($this->id, $url, $options);
     }
+
+//    public function beforeValidate()
+//    {
+//        if ($this->birthdate != null) {
+//            $new_data_format = date('Y-m-d', strtotime($this->birthdate));
+//            $this->birthdate = $new_data_format;
+//        }
+//        return parent::beforeValidate();
+//    }
+
+
 }
