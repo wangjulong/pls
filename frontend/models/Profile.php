@@ -79,6 +79,7 @@ class Profile extends \yii\db\ActiveRecord
             'gender_id' => 'Gender ID',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'profileIdLink' => Yii::t('app', 'Profile'),
         ];
     }
 
