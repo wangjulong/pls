@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\models\PermissionHelpers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -19,23 +20,33 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['index', 'create', 'view',],
                         'allow' => true,
                         'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return PermissionHelpers::requireMinimumRole('Admin')
+                            && PermissionHelpers::requireStatus('Active');
+                        }
+                    ],
+                    [
+                        'actions' => ['update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return PermissionHelpers::requireMinimumRole('SuperUser')
+                            && PermissionHelpers::requireStatus('Active');
+                        }
                     ],
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
