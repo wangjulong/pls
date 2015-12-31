@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Analysis;
 use Yii;
 use common\models\Kjh;
 use common\models\search\KjhSearch;
@@ -140,6 +141,7 @@ class KjhController extends Controller
         // 成功自动跳转到走势图页面
         $this->redirect('/kjh/show');
     }
+
     /**
      * 展示开奖号码表格
      */
@@ -161,6 +163,7 @@ class KjhController extends Controller
         $model = $this->numbersFormat($temp2);
         return $this->render('show', ['model' => $model]);
     }
+
     protected function numbersFormat($numbers)
     {
         $views = array();
@@ -187,6 +190,19 @@ class KjhController extends Controller
         }
         // 返回数组
         return $views;
+    }
+
+    /**
+     * 根据参数通过 类 Analysis 的方法 entire 实现分析过程得到结果并渲染输出
+     * @param $entireNum   Analysis 整个分析过程用到的所有号码期数
+     * @param $analysisNum Analysis 具体分析的期数
+     * @param $chartNum    Analysis 走势图中显示的期数
+     */
+    public function actionAnalysis($entireNum, $analysisNum, $chartNum)
+    {
+        $analysis = new Analysis();
+        $analysis->entire($entireNum, $analysisNum, $chartNum);
+
     }
 
 }
