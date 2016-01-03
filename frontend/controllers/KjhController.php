@@ -143,6 +143,20 @@ class KjhController extends Controller
     }
 
     /**
+     * 根据参数通过 类 Analysis 的方法 entire 实现分析过程得到结果并渲染输出
+     * @param $entireNum   Analysis 整个分析过程用到的所有号码期数
+     * @param $analysisNum Analysis 具体分析的期数
+     * @param $chartNum Analysis 走势图中显示的期数
+     * @param $interval Analysis 分析过程中用于计算的间隔期数，越大计算越复杂
+     */
+    public function actionAnalysis($entireNum, $analysisNum, $chartNum, $interval = 3)
+    {
+        $analysis = new Analysis();
+        $analysis->entire($entireNum, $analysisNum, $chartNum, $interval);
+
+    }
+
+    /**
      * 展示开奖号码表格
      */
     public function actionShow()
@@ -190,19 +204,6 @@ class KjhController extends Controller
         }
         // 返回数组
         return $views;
-    }
-
-    /**
-     * 根据参数通过 类 Analysis 的方法 entire 实现分析过程得到结果并渲染输出
-     * @param $entireNum   Analysis 整个分析过程用到的所有号码期数
-     * @param $analysisNum Analysis 具体分析的期数
-     * @param $chartNum    Analysis 走势图中显示的期数
-     */
-    public function actionAnalysis($entireNum, $analysisNum, $chartNum)
-    {
-        $analysis = new Analysis();
-        $analysis->entire($entireNum, $analysisNum, $chartNum);
-
     }
 
 }

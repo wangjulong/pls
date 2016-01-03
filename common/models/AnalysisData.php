@@ -15,14 +15,14 @@ namespace common\models;
 
 class AnalysisData
 {
-// 整个分析的数据集
+    // 整个分析的数据集
     private static $entireData = [];
-
+    private static $followTable;
 
     /**
      * 该函数返回静态成员 $entireData（分析过程中用到的所有数据）
      * 如果已经从数据库中取得数据，则直接返回当前的数据，否则连接数据库并获取数据并返回
-     * @param $entireNum 从数据库中取出的最后多少期数据
+     * @param integer $entireNum  从数据库中取出的最后多少期数据
      * @return array|\yii\db\ActiveRecord[]
      */
     public static function getEntireData($entireNum)
@@ -42,4 +42,22 @@ class AnalysisData
 
         return self::$entireData;
     }
+
+    /**
+     * @return mixed
+     */
+    public static function getFollowTable()
+    {
+        return self::$followTable;
+    }
+
+    /**
+     * @param mixed $followTable
+     */
+    public static function setFollowTable($followTable)
+    {
+        self::$followTable = $followTable;
+    }
+
+
 }
