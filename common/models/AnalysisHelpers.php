@@ -42,7 +42,75 @@ class AnalysisHelpers
     public static function stepKJH($entireData, $entireNum, $analysisNum, $interval)
     {
 
+        // 1 循环 analysisNum
+        for ($i = $entireNum - $analysisNum; $i < $entireNum; $i++) {
+            // Running Status:
+            // $entireData: [
+            //      '0' => [
+            //          'qh' => 2015289,
+            //          'bai' => 5,
+            //          'shi' => 2,
+            //          'ge' => 9
+            //      ],
+            //      ...
+            // ]
+            // $entireNum:80
+            // $analysisNum:5
+            // $interval:3
+            // $i : 75,76,77,78,79
+            echo $i.'<br />';
 
-        return ['result' => 'this is the test of stepKJH'];
+
+
+
+
+
+        }
+
+
+
+        return ['result' => [
+            'test'=>'This is test parameters',
+            'entireData'=>$entireData,
+            'entireNum'=>$entireNum,
+            'analysisNum'=>$analysisNum,
+            'interval'=>$interval,
+        ]];
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
