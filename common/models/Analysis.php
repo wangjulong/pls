@@ -34,8 +34,8 @@ class Analysis
 
         // 2 计算数据：根据参数计算出开奖号码跟随表并保存到 AnalysisData::$followTable
         $arr = AnalysisHelpers::stepKJH($entireData,$entireNum,$analysisNum,$interval);
-        AnalysisData::setFollowTable($arr);
-        print_r(AnalysisData::getFollowTable());
+//        AnalysisData::setFollowTable($arr);
+//        print_r($arr);
 
 
     }

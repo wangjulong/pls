@@ -58,8 +58,9 @@ class AnalysisHelpers
             // $analysisNum:5
             // $interval:3
             // $i : 75,76,77,78,79
-            echo $i.'<br />';
-
+            echo $i.':';
+            print_r($entireData[$i]);
+            echo '<br />';
 
 
 
